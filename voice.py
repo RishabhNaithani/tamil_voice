@@ -7,12 +7,14 @@ AUDIO_FILE = "audio_first_50.mp3"
 TIMESTAMPS = [
     0, 8.4, 16, 26, 34, 43, 52, 62, 71, 79, 89, 98, 107, 115, 125, 133, 140, 151,
     161, 170, 178, 187, 196, 207, 214, 224, 234, 243, 253, 263, 273, 284, 294,
-    304, 314, 321, 331, 342, 351, 360, 370, 378, 388, 397.5, 407, 420, 430, 440,
-    449, 457.5, 468
+    304, 314, 321, 331, 342, 351, 360, 370, 378, 388, 397.5, 407, 420, 430, 
+    440,
+    449.5, 
+    458.5
 ]
 SEQUENCE = list(range(len(TIMESTAMPS)))
 PAUSE_BETWEEN_SEGMENTS = 1.0
-LAST_SEGMENT_DURATION = 5.0
+LAST_SEGMENT_DURATION = 10.0
 FPS = 60
 
 current_index = 0
@@ -40,6 +42,7 @@ async def play_segment(index):
     if index < len(SEQUENCE) - 1 and SEQUENCE[index + 1] < len(TIMESTAMPS):
         next_time = TIMESTAMPS[SEQUENCE[index + 1]]
         duration = next_time - start_time
+    
     else:
         duration = LAST_SEGMENT_DURATION
     if duration <= 0:
@@ -53,6 +56,9 @@ async def play_segment(index):
         print("Pausing between segments")
         await asyncio.sleep(PAUSE_BETWEEN_SEGMENTS)
         current_index += 1
+        if current_index >= len(SEQUENCE):
+            print("Resetting sequence to start")
+            current_index = 0
     except pygame.error as e:
         print(f"Error playing audio at timestamp {start_time}: {e}")
 
